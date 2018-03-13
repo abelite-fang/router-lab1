@@ -125,8 +125,10 @@ def start_ping(net):
     # Hint: Use host.popen(cmd, shell=True).  If you pass shell=True
     # to popen, you can redirect cmd's output using shell syntax.
     # i.e. ping ... > /path/to/ping.
-    print("pyin /bin/ping h2, shell=True")
-    h1.popen("/bin/ping h2, shell=True") 
+    h1 = net.get('h1')
+    h2 = net.get('h2')
+    print(" - pyin /bin/ping h2, shell=True")
+    h1.popen("/bin/ping 10.0.0.2", shell=True) 
 
 
 def bufferbloat():
@@ -140,7 +142,7 @@ def bufferbloat():
     # links.
     dumpNodeConnections(net.hosts)
     # This performs a basic all pairs ping test.
-    print("pyin pingAll")
+    print(" - pyin pingAll")
     net.pingAll()
 
     # Start all the monitoring processes
@@ -156,8 +158,12 @@ def bufferbloat():
 
     # TODO: Start iperf, webservers, etc.
     # start_iperf(net)
+    print(" - pyin start_iperf")
     start_iperf(net)
-
+    print(" - pyin start_webserver")
+    start_webserver(net)
+    print(" - pyin start_ping")
+    start_ping(net)
     # TODO: measure the time it takes to complete webpage transfer
     # from h1 to h2 (say) 3 times.  Hint: check what the following
     # command does: curl -o /dev/null -s -w %{time_total} google.com
