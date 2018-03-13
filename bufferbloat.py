@@ -153,6 +153,7 @@ def bufferbloat():
 
     # TODO: Start iperf, webservers, etc.
     # start_iperf(net)
+    start_iperf(net)
 
     # TODO: measure the time it takes to complete webpage transfer
     # from h1 to h2 (say) 3 times.  Hint: check what the following
@@ -181,6 +182,7 @@ def bufferbloat():
     # emulated hosts h1 and h2.
     # CLI(net)
 
+    echo "pyin CLI(net)"
     CLI(net)
     stop_tcpprobe()
     qmon.terminate()

@@ -15,8 +15,8 @@ for qsize in 20 100; do
     dir=bb-q$qsize
 
     # TODO: Run bufferbloat.py here...
-    echo "exec: python bufferbloat.py"
-    python bufferbload.py 
+    echo "exec: python bufferbloat.py -d . --maxq $qsize -b $bwnet --delay $delay"
+    python bufferbload.py -d . --maxq $qsize -b $bwnet --delay $delay
     # TODO: Ensure the input file names match the ones you use in
     # bufferbloat.py script.  Also ensure the plot file names match
     # the required naming convention when submitting your tarball.
