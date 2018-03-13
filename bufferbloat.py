@@ -80,8 +80,17 @@ class BBTopo(Topo):
         # TODO: Add links with appropriate characteristics
         # - Ref from https://laszlo.tw/?p=81
 	info("link switch to hosts")
-	self.addLink(switch, h1)
-	self.addLink(switch, h2)
+	
+	delay = args.delay
+	bw_host = args.bw_host
+	bw_net  = args.bw_net
+	maxq  = args.maxq
+	time  = args.time
+	
+		
+	self.addLink(switch, h1, bw=bw_host, delay="%sms" % delay, max_queue_size=maxq)
+	self.addLink(switch, h2, bw=bw_net,  delay="%sms" % delay, max_queue_size=maxq)
+
 	return
 
 # Simple wrappers around monitoring utilities.  You are welcome to
@@ -176,13 +185,15 @@ def bufferbloat():
 
     # Hint: have a separate function to do this and you may find the
     # loop below useful.
+    h1 = net.get('h1')
     h2 = net.get('h2')
     start_time = time()
+    time_rec = []
     while True:
         # do the measurement (say) 3 times.
         for a in range(3):
-		print(a)
-		h2.popen("curl -o /home/cs244/output/o.out -s -w %{time_total} 10.0.0.2:8000", shell=True)
+		out = h2.popen("curl -o /dev/null -s -w %%{time_total} %s" % h1.IP())
+		time_rec.append( out.communicate()[0] ) 
 	sleep(5)
         now = time()
 	print(start_time)
@@ -191,7 +202,7 @@ def bufferbloat():
             break
 	print delta
         print "%.1fs left..." % (args.time - delta)
-
+    print time_rec
     # TODO: compute average (and standard deviation) of the fetch
     # times.  You don't need to plot them.  Just note it in your
     # README and explain.
