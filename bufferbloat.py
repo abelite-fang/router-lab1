@@ -121,10 +121,12 @@ def start_ping(net):
     # TODO: Start a ping train from h1 to h2 (or h2 to h1, does it
     # matter?)  Measure RTTs every 0.1 second.  Read the ping man page
     # to see how to do this.
-
+    
     # Hint: Use host.popen(cmd, shell=True).  If you pass shell=True
     # to popen, you can redirect cmd's output using shell syntax.
     # i.e. ping ... > /path/to/ping.
+    print("pyin /bin/ping h2, shell=True")
+    h1.popen("/bin/ping h2, shell=True") 
 
 
 def bufferbloat():
@@ -138,6 +140,7 @@ def bufferbloat():
     # links.
     dumpNodeConnections(net.hosts)
     # This performs a basic all pairs ping test.
+    print("pyin pingAll")
     net.pingAll()
 
     # Start all the monitoring processes
@@ -163,10 +166,13 @@ def bufferbloat():
 
     # Hint: have a separate function to do this and you may find the
     # loop below useful.
+    h1 = net.get('h1')
     start_time = time()
     while True:
         # do the measurement (say) 3 times.
-        sleep(5)
+        #for a in range(3):
+	#	h1.popen("curl -o /dev/null -s -w %{time_total} 10.0.0.2:8000")
+	sleep(5)
         now = time()
         delta = now - start_time
         if delta > args.time:
@@ -182,8 +188,8 @@ def bufferbloat():
     # emulated hosts h1 and h2.
     # CLI(net)
 
-    echo "pyin CLI(net)"
-    CLI(net)
+    #print( "pyin CLI(net)" )
+    #CLI(net)
     stop_tcpprobe()
     qmon.terminate()
     net.stop()
