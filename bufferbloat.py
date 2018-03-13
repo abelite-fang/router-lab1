@@ -103,13 +103,15 @@ def start_qmon(iface, interval_sec=0.1, outfile="q.txt"):
 
 def start_iperf(net):
     h2 = net.get('h2')
+    h1 = net.get('h1')
     print "Starting iperf server..."
     # For those who are curious about the -w 16m parameter, it ensures
     # that the TCP flow is not receiver window limited.  If it is,
     # there is a chance that the router buffer may not get filled up.
     server = h2.popen("iperf -s -w 16m")
     # TODO: Start the iperf client on h1.  Ensure that you create a
-    # long lived TCP flow.
+    # long lived TCP flow
+    client = h1.popen("iperf -c 10.0.0.2")
 
 def start_webserver(net):
     h1 = net.get('h1')
@@ -127,8 +129,10 @@ def start_ping(net):
     # i.e. ping ... > /path/to/ping.
     h1 = net.get('h1')
     h2 = net.get('h2')
-    print(" - pyin /bin/ping h2, shell=True")
-    h1.popen("/bin/ping 10.0.0.2", shell=True) 
+    print(" - pyin /bin/ping h1, shell=True")
+    h2.popen(['/bin/ping','10.0.0.1'], shell=True, stdout=PIPE) 
+    #stdout = process.communicate()
+    #print stdout
 
 
 def bufferbloat():
@@ -172,17 +176,20 @@ def bufferbloat():
 
     # Hint: have a separate function to do this and you may find the
     # loop below useful.
-    h1 = net.get('h1')
+    h2 = net.get('h2')
     start_time = time()
     while True:
         # do the measurement (say) 3 times.
-        #for a in range(3):
-	#	h1.popen("curl -o /dev/null -s -w %{time_total} 10.0.0.2:8000")
+        for a in range(3):
+		print(a)
+		h2.popen("curl -o /home/cs244/output/o.out -s -w %{time_total} 10.0.0.2:8000", shell=True)
 	sleep(5)
         now = time()
+	print(start_time)
         delta = now - start_time
         if delta > args.time:
             break
+	print delta
         print "%.1fs left..." % (args.time - delta)
 
     # TODO: compute average (and standard deviation) of the fetch
@@ -194,7 +201,7 @@ def bufferbloat():
     # emulated hosts h1 and h2.
     # CLI(net)
 
-    #print( "pyin CLI(net)" )
+    #print(" - pyin CLI(net) Debugging")
     #CLI(net)
     stop_tcpprobe()
     qmon.terminate()
