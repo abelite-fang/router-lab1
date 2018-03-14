@@ -14,8 +14,10 @@ from time import sleep, time
 from multiprocessing import Process
 from argparse import ArgumentParser
 
+#from statistics import mean
 from monitor import monitor_qlen
 import termcolor as T
+import numpy as np
 
 import sys
 import os
@@ -120,7 +122,7 @@ def start_iperf(net):
     server = h2.popen("iperf -s -w 16m")
     # TODO: Start the iperf client on h1.  Ensure that you create a
     # long lived TCP flow
-    client = h1.popen("iperf -c 10.0.0.2 -t 200 ", shell=True)
+    client = h1.popen("iperf -c %s -t %s > %s/iperf.txt" % (h2.IP(), args.time, args.dir), shell=True)
 
 def start_webserver(net):
     h1 = net.get('h1')
@@ -139,9 +141,7 @@ def start_ping(net):
     h1 = net.get('h1')
     h2 = net.get('h2')
     print(" - pyin /bin/ping h1, shell=True")
-    #h2.popen(['/bin/ping','-c', ,'10.0.0.1'], shell=True, stdout=PIPE) 
-    h1.popen("ping -c %s -i 0.1 %s > %s/ping.txt" % \
-        (args.time * 10, h2.IP(), args.dir), shell=True)
+    h1.popen("ping -c %s -i 0.1 %s > %s/ping.txt" % (args.time * 10, h2.IP(), args.dir), shell=True)
     #stdout = process.communicate()
     #print stdout
 
@@ -204,7 +204,9 @@ def bufferbloat():
             break
 	print delta
         print "%.1fs left..." % (args.time - delta)
-    print time_rec
+    print "Mean time = " 
+    mean = np.array(time_rec).astype(np.float)
+    print np.mean(mean)
     # TODO: compute average (and standard deviation) of the fetch
     # times.  You don't need to plot them.  Just note it in your
     # README and explain.
