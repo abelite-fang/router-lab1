@@ -186,9 +186,9 @@ def bufferbloat():
     time_rec = []
     while True:
         # do the measurement (say) 3 times.
-        for a in range(3):
-		out = h2.popen("curl -o %s/download.html -s -w %%{time_total} %s/http/index.html" % (args.dir, h1.IP()))
-		time_rec.append( out.communicate()[0] ) 
+        #for a in range(3):
+	out = h2.popen("curl -o %s/download.html -s -w %%{time_total} %s/http/index.html" % (args.dir, h1.IP()))
+	time_rec.append( out.communicate()[0] ) 
 	sleep(5)
         now = time()
         delta = now - start_time
