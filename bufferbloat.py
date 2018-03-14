@@ -77,21 +77,14 @@ class BBTopo(Topo):
         # Here I have created a switch.  If you change its name, its
         # interface names will change from s0-eth1 to newname-eth1.
         switch = self.addSwitch('s0')
-	h1 = self.addHost('h1',ip='10.0.0.1')
-	h2 = self.addHost('h2',ip='10.0.0.2')
+	h1 = self.addHost('h1')
+	h2 = self.addHost('h2')
         # TODO: Add links with appropriate characteristics
         # - Ref from https://laszlo.tw/?p=81
 	info("link switch to hosts")
-	
-	delay = args.delay
-	bw_host = args.bw_host
-	bw_net  = args.bw_net
-	maxq  = args.maxq
-	time  = args.time
-	
 		
-	self.addLink(switch, h1, bw=bw_host, delay="%sms" % delay, max_queue_size=maxq)
-	self.addLink(switch, h2, bw=bw_net,  delay="%sms" % delay, max_queue_size=maxq)
+	self.addLink(switch, h1, bw=args.bw_host, delay="%sms" % args.delay, max_queue_size=args.maxq)
+	self.addLink(switch, h2, bw=args.bw_net,  delay="%sms" % args.delay, max_queue_size=args.maxq)
 
 	return
 

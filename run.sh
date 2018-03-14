@@ -15,8 +15,9 @@ for qsize in 20 100; do
     dir=bb-q$qsize
 
     # TODO: Run bufferbloat.py here...
+    mn -c
     echo "exec: python bufferbloat.py -d $dir --maxq $qsize -b $bwnet --delay $delay"
-    python bufferbloat.py -d $dir --maxq $qsize -b $bwnet --delay $delay
+    python bufferbloat.py -d $dir --maxq $qsize -t $time -b $bwnet --delay $delay
     #echo "exec break"
     #break
     # TODO: Ensure the input file names match the ones you use in
