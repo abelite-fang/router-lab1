@@ -120,7 +120,7 @@ def start_iperf(net):
     server = h2.popen("iperf -s -w 16m")
     # TODO: Start the iperf client on h1.  Ensure that you create a
     # long lived TCP flow
-    client = h1.popen("iperf -c 10.0.0.2")
+    client = h1.popen("iperf -c 10.0.0.2 -t 200 ", shell=True)
 
 def start_webserver(net):
     h1 = net.get('h1')
@@ -139,7 +139,9 @@ def start_ping(net):
     h1 = net.get('h1')
     h2 = net.get('h2')
     print(" - pyin /bin/ping h1, shell=True")
-    h2.popen(['/bin/ping','10.0.0.1'], shell=True, stdout=PIPE) 
+    #h2.popen(['/bin/ping','-c', ,'10.0.0.1'], shell=True, stdout=PIPE) 
+    h1.popen("ping -c %s -i 0.1 %s > %s/ping.txt" % \
+        (args.time * 10, h2.IP(), args.dir), shell=True)
     #stdout = process.communicate()
     #print stdout
 
@@ -192,11 +194,11 @@ def bufferbloat():
     while True:
         # do the measurement (say) 3 times.
         for a in range(3):
-		out = h2.popen("curl -o /dev/null -s -w %%{time_total} %s" % h1.IP())
+		out = h2.popen("curl -o %s/download.html -s -w %%{time_total} %s/http/index.html" % (args.dir, h1.IP()))
 		time_rec.append( out.communicate()[0] ) 
 	sleep(5)
         now = time()
-	print(start_time)
+	#print(start_time)
         delta = now - start_time
         if delta > args.time:
             break
