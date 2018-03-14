@@ -194,7 +194,7 @@ def bufferbloat():
         delta = now - start_time
         if delta > args.time:
             break
-	print delta
+	#print delta
         print "%.1fs left..." % (args.time - delta)
     print "Mean time = " 
     mean = np.array(time_rec).astype(np.float)
