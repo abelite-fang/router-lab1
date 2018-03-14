@@ -83,8 +83,8 @@ class BBTopo(Topo):
         # - Ref from https://laszlo.tw/?p=81
 	info("link switch to hosts")
 		
-	self.addLink(switch, h1, bw=args.bw_host, delay="%sms" % args.delay, max_queue_size=args.maxq)
-	self.addLink(switch, h2, bw=args.bw_net,  delay="%sms" % args.delay, max_queue_size=args.maxq)
+	self.addLink(switch, h1, bw=args.bw_host, delay='%sms' % args.delay, max_queue_size=args.maxq)
+	self.addLink(switch, h2, bw=args.bw_net,  delay='%sms' % args.delay, max_queue_size=args.maxq)
 
 	return
 
@@ -134,7 +134,7 @@ def start_ping(net):
     h1 = net.get('h1')
     h2 = net.get('h2')
     print(" - pyin /bin/ping h1, shell=True")
-    h1.popen("ping -c %s -i 0.1 %s > %s/ping.txt" % (args.time * 10, h2.IP(), args.dir), shell=True)
+    h1.popen("ping -i 0.1 %s > %s/ping.txt" % (h2.IP(), args.dir), shell=True)
     #stdout = process.communicate()
     #print stdout
 
@@ -191,7 +191,6 @@ def bufferbloat():
 		time_rec.append( out.communicate()[0] ) 
 	sleep(5)
         now = time()
-	#print(start_time)
         delta = now - start_time
         if delta > args.time:
             break
